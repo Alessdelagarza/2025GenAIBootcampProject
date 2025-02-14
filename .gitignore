@@ -1,0 +1,10 @@
+config.json
+.aider*
+venv/
+.venv/
+aider-start.sh
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
