@@ -1,4 +1,5 @@
-"""Video application that applies effects to video feed based on user prompts."""
+"""Video application that applies effects
+to video feed based on user prompts."""
 
 import cv2
 import logging
@@ -30,6 +31,7 @@ sys.path.insert(0, str(root_dir))
 
 try:
     import config
+
     config_instance = config.Config()
     logger.info("Config loaded successfully!")
     logger.info(f"API type: {config_instance.api_type}")
@@ -54,12 +56,14 @@ print(f"Using OpenAI API version: {API_VERSION}")
 
 # Define available effects
 def apply_van_gogh_effect(frame):
-    """Applies a stylized filter to the frame, reminiscent of Van Gogh's art style."""
+    """Applies a stylized filter to the frame, reminiscent of Van Gogh's art
+    style."""
     return cv2.stylization(frame, sigma_s=60, sigma_r=0.07)
 
 
 def apply_melting_effect(frame):
-    """Applies a color mapping to simulate a melting effect, creating a distorted appearance."""
+    """Applies a color mapping to simulate a melting effect, creating a
+    distorted appearance."""
     return cv2.applyColorMap(frame, cv2.COLORMAP_JET)
 
 
@@ -78,15 +82,16 @@ def interpret_prompt(prompt):
 
     # Describe available effects with their descriptions
     effect_descriptions = {
-        "van gogh": "Apply a stylized filter to the frame, reminiscent of Van Gogh's art style.",
-        "melting": "Apply a color mapping to simulate a melting effect, creating a distorted appearance."
+        "van gogh": """Apply a stylized filter to the frame, reminiscent of Van
+                    Gogh's art style.""",
+        "melting": """Apply a color mapping to simulate a melting effect,
+                   creating a distorted appearance.""",
     }
 
     # Create a detailed prompt for OpenAI to choose an effect
-    openai_prompt = (
-        f"Analyze the following user prompt: '{prompt}' and determine which effect "
-        f"makes the most sense to apply based on these descriptions. If none are suitable, respond with 'none'.\n\n"
-    )
+    openai_prompt = f"""Analyze the following user prompt: '{prompt}' and
+    determine which effect makes the most sense to apply based on these
+    descriptions. If none are suitable, respond with 'none'."""
     for effect_name, description in effect_descriptions.items():
         openai_prompt += f"- {effect_name}: {description}\n"
 
@@ -94,11 +99,15 @@ def interpret_prompt(prompt):
     response = client.chat.completions.create(
         model="gpt-4",  # Use the appropriate model for your API
         messages=[
-            {"role": "system", "content": "You are an assistant that helps determine image effects. Keep responses short and concise."},
-            {"role": "user", "content": openai_prompt}
+            {
+                "role": "system",
+                "content": """You are an assistant that helps
+             determine image effects. Keep responses short and concise.""",
+            },
+            {"role": "user", "content": openai_prompt},
         ],
         max_tokens=40,
-        temperature=0.5
+        temperature=0.5,
     )
 
     # Extract the raw message returned by OpenAI
@@ -106,7 +115,11 @@ def interpret_prompt(prompt):
     effect_name = raw_message.lower()
 
     # Return both the interpreted effect and the raw message
-    return effect_name if effect_name in effect_descriptions or effect_name == "none" else "none", raw_message
+    # Check if effect exists in descriptions or is "none",
+    # otherwise return "none"
+    is_valid = effect_name in effect_descriptions or effect_name == "none"
+    selected_effect = effect_name if is_valid else "none"
+    return selected_effect, raw_message
 
 
 # Apply the selected effect
@@ -123,13 +136,17 @@ def apply_effect(frame, effect_name):
 def main():
     st.title("Real-Time Video Augmentation with OpenAI")
     prompt = st.text_input("Enter an effect prompt:")
-    run = st.checkbox('Run')
+    run = st.checkbox("Run")
 
     # Interpret the prompt outside the loop
     if prompt:
         effect_name, raw_message = interpret_prompt(prompt)
     else:
-        effect_name, raw_message = "none", "Using default effect: no effect applied."
+        effect_name, raw_message = (
+            "none",
+            """Using default effect:
+        no effect applied.""",
+        )
 
     # Display the raw message from OpenAI
     st.write(f"OpenAI response: {raw_message}")
