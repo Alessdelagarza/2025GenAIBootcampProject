@@ -18,6 +18,7 @@ We use Pipenv to manage our project dependencies. Pipenv simplifies the process 
     Navigate to the project root directory and run:
     ```sh
     pipenv install
+    pipenv run pre-commit install
     ```
 
 3. **Set Up a Virtual Environment**:

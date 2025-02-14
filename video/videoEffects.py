@@ -2,8 +2,11 @@ import cv2
 
 
 def apply_effect(frame, effect_name):
-    """Applies an effect to the frame based on the effect name. This is a response that comes from the interpretation of a prompt sent to OpenAI.
-    """
+    """Applies an effect to the frame based on the effect name.
+    This is a response that comes from the interpretation of a
+    prompt sent to OpenAI. We will need to verify that the
+    effect name is valid before applying the effect name returned
+    is deterministic"""
     if effect_name == "water color":
         return apply_water_color_effect(frame)
     elif effect_name == "heat map":
