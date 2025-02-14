@@ -28,11 +28,18 @@ We use Pipenv to manage our project dependencies. Pipenv simplifies the process 
 
 These steps ensure that all required packages are installed and that the project runs in an isolated environment.
 
-### Testing Configuration
+### Testing Configurations
 
 To ensure your configuration is set up correctly, run the manual tests:
 ```sh
-pytest test/manual -p no:logging -v
+pipenv run test-configs
+```
+
+### Try the Prototype
+
+Once you've successfully passed the configuration tests, you're ready to experience the exciting initial prototype of our application! Give it a try with this command:
+```sh
+pipenv run try-prototype
 ```
 
 

@@ -5,11 +5,15 @@ name = "pypi"
 
 [packages]
 openai = "*"
-streamlit = "*"
 opencv-python-headless = "*"
 pytest = "*"
+streamlit = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.11"
+
+[scripts]
+test-configs = "pytest test/manual -p no:logging -v"
+try-prototype = "streamlit run examples/videoApp.py"
