@@ -7,7 +7,7 @@ class Config:
 
     def load_config(self, config_file: str):
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, "r") as f:
                 config = json.load(f)
 
             # Azure OpenAI settings
@@ -19,10 +19,10 @@ class Config:
 
             self.embedding_api_base = config.get("embedding_api_base", "")
             self.embedding_api_version = config.get(
-                "embedding_api_version", "2023-05-15")
+                "embedding_api_version", "2023-05-15"
+            )
             self.embedding_api_key = config.get("embedding_api_key", "")
-            self.embedding_deployment_name = config.get(
-                "embedding_deployment_name", "")
+            self.embedding_deployment_name = config.get("embedding_deployment_name", "")
 
             # Chat settings
             self.temperature = config.get("temperature", 0.7)
@@ -30,19 +30,17 @@ class Config:
             self.system_message = config.get(
                 "system_message",
                 "You are a helpful assistant that provides accurate and "
-                "concise responses."
+                "concise responses.",
             )
 
             # Gradio UI settings
             self.theme = config.get("theme", "default")
             self.title = config.get("title", "AI Chatbot")
-            self.description = config.get(
-                "description", "Chat with AI Assistant")
+            self.description = config.get("description", "Chat with AI Assistant")
             self.examples = config.get("examples", [])
 
         except FileNotFoundError:
-            print(f"Config file {config_file} not found. "
-                  "Using default values.")
+            print(f"Config file {config_file} not found. " "Using default values.")
             self.set_defaults()
 
     def set_defaults(self):

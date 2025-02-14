@@ -5,9 +5,12 @@ name = "pypi"
 
 [packages]
 openai = "*"
-opencv-python-headless = "*"
 pytest = "*"
 streamlit = "*"
+opencv-python = "*"
+flake8 = "*"
+black = "*"
+pre-commit = "*"
 
 [dev-packages]
 
