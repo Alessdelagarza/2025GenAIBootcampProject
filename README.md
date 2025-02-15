@@ -50,7 +50,7 @@ To try the effects demo, run the following command:
 pipenv run effects-demo
 ```
 Instructions will be displayed in the terminal.
-- Video Effects Demo
+Video Effects Demo:
 - Press 'q' to quit
 - Press 'n' for next effect
 
