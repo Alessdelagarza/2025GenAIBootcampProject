@@ -11,6 +11,8 @@ def apply_effect(frame, effect_name):
         return apply_water_color_effect(frame)
     elif effect_name == "heat map":
         return apply_heat_map_effect(frame)
+    elif effect_name == "grayscale":
+        return apply_grayscale_effect(frame)
     else:
         return apply_default_effect(frame)
 
@@ -24,6 +26,11 @@ def apply_heat_map_effect(frame):
     """applies a color mapping effect to the frame that makes it seems as if we are
     measuring temperature."""
     return cv2.applyColorMap(frame, cv2.COLORMAP_JET)
+
+
+def apply_grayscale_effect(frame):
+    """Converts the frame to grayscale (black and white)."""
+    return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
 def apply_default_effect(frame):

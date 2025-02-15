@@ -11,6 +11,7 @@ opencv-python = "*"
 flake8 = "*"
 black = "*"
 pre-commit = "*"
+video-effects = {file = ".", editable = true}
 
 [dev-packages]
 
@@ -20,3 +21,4 @@ python_version = "3.11"
 [scripts]
 test-configs = "pytest test/manual -p no:logging -v"
 try-prototype = "streamlit run examples/videoApp.py"
+effects-demo = "python examples/videoEffectsDemo.py"

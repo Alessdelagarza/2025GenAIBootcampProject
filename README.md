@@ -43,4 +43,15 @@ Once you've successfully passed the configuration tests, you're ready to experie
 pipenv run try-prototype
 ```
 
+### Try the Effects Demo
 
+To try the effects demo, run the following command:
+```sh
+pipenv run effects-demo
+```
+Instructions will be displayed in the terminal.
+```
+Video Effects Demo
+Press 'q' to quit
+Press 'n' for next effect
+```

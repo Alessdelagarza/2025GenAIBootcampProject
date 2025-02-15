@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d1dbdac2f0ca3fe4b0d8275c1c3e06e04ee66bf4757cacb8d2670f938e1d1dd1"
+            "sha256": "e158e4563ffc5edc632012bd7bc75fb975128b9cb688fd7582827067a9ca956f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1320,6 +1320,10 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2.3.0"
+        },
+        "video-effects": {
+            "editable": true,
+            "file": "."
         },
         "virtualenv": {
             "hashes": [

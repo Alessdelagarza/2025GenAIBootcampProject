@@ -8,3 +8,6 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+
+**/video_effects.eff.info/
+*.eff.info/
