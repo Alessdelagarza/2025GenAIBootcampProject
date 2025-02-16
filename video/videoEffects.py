@@ -29,7 +29,7 @@ def apply_heat_map_effect(frame):
 
 
 def apply_grayscale_effect(frame):
-    """Converts the frame to grayscale (black and white)."""
+    """Converts the frame to grayscale (black and white image)."""
     return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
