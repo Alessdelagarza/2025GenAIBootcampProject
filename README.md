@@ -30,8 +30,7 @@ We use Pipenv to manage our project dependencies. Pipenv simplifies the process 
 These steps ensure that all required packages are installed and that the project runs in an isolated environment.
 
 ### Testing Configurations
-
-To ensure your configuration is set up correctly, run the manual tests:
+For confugurations add config.json in the root directory. Look at config.json.example for the required fields. To ensure your configuration is set up correctly, run the manual tests:
 ```sh
 pipenv run test-configs
 ```
@@ -54,14 +53,3 @@ Instructions will be displayed in the terminal.
 Video Effects Demo:
 - Press 'q' to quit
 - Press 'n' for next effect
-
-To try the effects demo, run the following command:
-```sh
-pipenv run effects-demo
-```
-Instructions will be displayed in the terminal.
-```
-Video Effects Demo
-Press 'q' to quit
-Press 'n' for next effect
-```
