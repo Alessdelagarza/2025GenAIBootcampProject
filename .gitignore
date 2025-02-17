@@ -11,3 +11,6 @@ __pycache__/
 
 **/video_effects.eff.info/
 *.eff.info/
+
+video/yolo*
+video/coco*
