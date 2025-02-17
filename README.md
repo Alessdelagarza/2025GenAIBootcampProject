@@ -7,7 +7,7 @@ This project showcases the application of GenAI concepts learned during the Slal
 
 We use Pipenv to manage our project dependencies. Pipenv simplifies the process of managing Python packages, virtual environments, and dependency resolution.
 
-### Steps to Set Up Pipenv
+### Steps to Set Up
 
 1. **Install Pipenv**:
     ```sh
@@ -25,6 +25,15 @@ We use Pipenv to manage our project dependencies. Pipenv simplifies the process 
     To create and activate a virtual environment, use:
     ```sh
     pipenv shell
+    ```
+
+4. **Make sure you have the YOLO weights and cfg file**:
+    You might need to `brew install wget` to get the files. Do not commit these files to the repo! (too large for github upload)
+    ```sh
+    cd video
+    wget https://pjreddie.com/media/files/yolov3.weights
+    wget https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3.cfg
+    wget https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
     ```
 
 These steps ensure that all required packages are installed and that the project runs in an isolated environment.
