@@ -9,8 +9,14 @@ __pycache__/
 *.pyd
 .Python
 
-**/video_effects.eff.info/
-*.eff.info/
+# Ignore all video_effects.eff.info files
+video_effects.egg-info/
+video_effects.egg-info/*
+video_effects.egg-info/PKG-INFO
+video_effects.egg-info/SOURCES.txt
+video_effects.egg-info/dependency_links.txt
+video_effects.egg-info/top_level.txt
 
+# Ignore all YOLO and COCO files
 video/yolo*
 video/coco*
