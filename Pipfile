@@ -12,6 +12,8 @@ flake8 = "*"
 black = "*"
 pre-commit = "*"
 video-effects = {file = ".", editable = true}
+pandas = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
