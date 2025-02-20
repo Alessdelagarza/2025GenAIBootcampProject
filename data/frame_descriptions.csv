@@ -1,6 +1,6 @@
 ﻿frame_name,description
 normal,This frame is the default. Any time the user wants to return back to normal or wants to reset their video this should be the frame that is applied.
 grayscale,This frame is perfect for situations where users describe wanting to look like an old vintage movie. This is also a great frame for when users want to look like they are in the dark. This frame also works for when users describe wanting to look like they are in an old horror movie.
-water_color,This frame is great use for when a user wants to take an artistic approach with their video. This frame makes the video feed appear like a water color painting. Perfect for those seeking an artistic biew
+water_color,This frame is great use for when a user wants to take an artistic approach with their video. This frame makes the video feed appear like a water color painting. Perfect for those seeking an artistic view
 heat_map,This frame is perfect for when users what to display light intensity as temperature. When users want to show ranges of temperature and convey feelings of heat or cold this would be the perfect frame.
 object_detection,This frame is used to detect objects. If user wants to tell a states that they want to detect objects or use objects to come up with a writing idea this would be the perfect frame.
