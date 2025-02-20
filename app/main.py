@@ -1,6 +1,7 @@
 import streamlit as st
 import logging
 import data.embeddings as llm
+import video.videoEffects as fxs
 import cv2
 
 logging.basicConfig(
@@ -38,12 +39,19 @@ def main():
             )
         else:
             logger.info("No prompt received")
+            frame_name = "normal"
+            explanation = "Default effect applied"
 
         # Initialize video capture
         cap = cv2.VideoCapture(0)
 
         # Create a placeholder in the Streamlit app
         video_placeholder = st.empty()
+
+        # Add a checkbox for object detection trigger
+        checkbox_trigger = st.checkbox("Detect Objects", value=False)
+        logger.info(f"Object detection trigger: {checkbox_trigger}")
+        detected_objects_placeholder = st.empty()
 
         while video_run:
             ret, frame = cap.read()
@@ -52,8 +60,25 @@ def main():
                 st.error("Failed to capture video")
                 break
 
-            # Display the frame in the placeholder
-            video_placeholder.image(frame, channels="BGR", use_container_width=True)
+            # Apply the effect and convert from BGR to RGB for Streamlit
+            if frame_name == "object_detection":
+                frame, detected_objects = fxs.apply_effect(
+                    frame, frame_name, trigger=checkbox_trigger
+                )
+                if detected_objects and detected_objects:
+                    # Display detected objects
+                    detected_objects_placeholder.write("Detected Objects:")
+                    for obj, conf, _ in detected_objects:
+                        detected_objects_placeholder.write(
+                            f"- {obj}: {conf:.2f} confidence"
+                        )
+                    if checkbox_trigger:
+                        video_run = False  # Stop the video only when trigger is active
+            else:
+                frame = fxs.apply_effect(frame, frame_name)
+
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            video_placeholder.image(frame_rgb, use_container_width=True)
 
         # Release the video capture when not running
         cap.release()
