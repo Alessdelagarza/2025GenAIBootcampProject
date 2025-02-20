@@ -56,9 +56,16 @@ pipenv run try-prototype
 
 To try the effects demo, run the following command:
 ```sh
-pipenv run effects-demo
+pipenv run try-effects
 ```
 Instructions will be displayed in the terminal.
 Video Effects Demo:
 - Press 'q' to quit
 - Press 'n' for next effect
+
+# Run the Demo App
+
+To run the demo app, run the following command:
+```sh
+pipenv run demo-app
+```

@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import logging
 
 net = cv2.dnn.readNet("video/yolov3.weights", "video/yolov3.cfg")
 layer_names = net.getLayerNames()
@@ -9,19 +10,28 @@ with open("video/coco.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 
-def apply_effect(frame, effect_name):
+def apply_effect(frame, effect_name, trigger=False):
     """Applies an effect to the frame based on the effect name.
     This is a response that comes from the interpretation of a
     prompt sent to OpenAI. We will need to verify that the
     effect name is valid before applying the effect name returned
     is deterministic"""
-    if effect_name == "water color":
+    logger = logging.getLogger(__name__)
+    logger.info(f"Applying effect: {effect_name}")
+
+    if effect_name == "water_color":
+        logger.debug("Applying water color effect")
         return apply_water_color_effect(frame)
-    elif effect_name == "heat map":
+    elif effect_name == "heat_map":
+        logger.debug("Applying heat map effect")
         return apply_heat_map_effect(frame)
     elif effect_name == "grayscale":
+        logger.debug("Applying grayscale effect")
         return apply_grayscale_effect(frame)
+    elif effect_name == "object_detection":
+        return apply_object_detection_theme(frame, trigger)
     else:
+        logger.debug("Applying default effect")
         return apply_default_effect(frame)
 
 
