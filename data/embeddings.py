@@ -1,10 +1,13 @@
 import logging
 import numpy as np
 import pandas as pd
+import os
+import filecmp
 from ast import literal_eval
 from config import Config
 from openai import AzureOpenAI
 from sklearn.metrics.pairwise import cosine_similarity
+from functools import lru_cache
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -37,29 +40,57 @@ except Exception as e:
     raise
 
 
-def get_embeddings(text: str) -> list:
+@lru_cache(maxsize=1000)
+def get_embeddings(text: str) -> tuple:
     try:
         response = embeddings_client.embeddings.create(
             input=text, model=config.embedding_deployment_name
         )
-        return response.data[0].embedding
+        return tuple(response.data[0].embedding)
     except Exception as e:
         logger.error(f"Error getting embeddings: {str(e)}")
         raise
 
 
+temp_csv = "data/frame_descriptions_temp.csv"
+df.to_csv(temp_csv, index=False)
+
+embeddings_file = "data/frame_descriptions_embeddings.csv"
+regenerate_embeddings = True
+
+if os.path.exists(embeddings_file):
+    if filecmp.cmp(temp_csv, "data/frame_descriptions.csv"):
+        try:
+            df = pd.read_csv(embeddings_file)
+            regenerate_embeddings = False
+            logger.info(
+                "Using existing embeddings - no changes detected in descriptions"
+            )
+        except Exception as e:
+            logger.error(f"Error reading existing embeddings file: {str(e)}")
+            regenerate_embeddings = True
+    else:
+        logger.info("Changes detected in descriptions - regenerating embeddings")
+
+if regenerate_embeddings:
+    try:
+        df["embedding"] = df["description"].apply(lambda x: list(get_embeddings(x)))
+        df.to_csv(embeddings_file, index=False)
+        logger.info("Successfully created and saved new embeddings")
+    except Exception as e:
+        logger.error(f"Error creating embeddings: {str(e)}")
+        raise
+
+# Clean up temp file
 try:
-    df["embedding"] = df["description"].apply(get_embeddings)
-    df.to_csv("data/frame_descriptions_embeddings.csv", index=False)
-    logger.info("Successfully created and saved embeddings")
+    os.remove(temp_csv)
 except Exception as e:
-    logger.error(f"Error creating embeddings: {str(e)}")
-    raise
+    logger.warning(f"Failed to remove temporary file: {str(e)}")
 
 
 def find_most_similar_frame(query_text: str) -> tuple[str, float]:
     try:
-        query_embedding = get_embeddings(query_text)
+        query_embedding = list(get_embeddings(query_text))
 
         if isinstance(df["embedding"].iloc[0], str):
             df["embedding"] = df["embedding"].apply(literal_eval)
