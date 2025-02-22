@@ -63,12 +63,24 @@ def main():
 
         if user_prompt:
             logger.info(f"Received user prompt: {user_prompt}")
-            frame_name, similarity = llm.find_most_similar_frame(user_prompt)
-            explanation = llm.explain_frame_selection(
-                user_prompt, frame_name, similarity
-            )
-            st.write(
-                f"AI Suggested Frame: {frame_name}\n" f"Description: {explanation}"
+            with st.spinner("AI is analyzing your prompt..."):
+                frame_name = llm.ai_frame_selection(user_prompt)
+                explanation = llm.ai_explanation(frame_name, user_prompt)
+            st.markdown(
+                f"""
+                <div style='
+                    background-color: #f0f0f0;
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin: 0 auto 20px auto;
+                    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                    text-align: center;
+                '>
+                    <strong>AI Suggested Frame:</strong> {frame_name}<br>
+                    <strong>Description:</strong> {explanation}
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
         else:
             logger.info("No prompt received")
@@ -80,7 +92,19 @@ def main():
 
         # Create a placeholder in the Streamlit app
         video_placeholder = st.empty()
-
+        with st.spinner("AI frame evaluation..."):
+            evaluation = llm.ai_evaluation(frame_name, explanation, user_prompt)
+            st.markdown(
+                f"""
+                <div style='background-color: #f0f0f0; padding: 15px;
+                border-radius: 10px; margin: 0 auto 20px auto;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                text-align: center;'>
+                <strong>AI Evaluation (Was this a good suggestion?):</strong> {evaluation}
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
         # Add a checkbox for object detection trigger
         checkbox_trigger = (
             st.checkbox("Detect Objects", value=False)
