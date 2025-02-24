@@ -17,7 +17,6 @@ def apply_effect(frame, effect_name, trigger=False):
     effect name is valid before applying the effect name returned
     is deterministic"""
     logger = logging.getLogger(__name__)
-    logger.info(f"Applying effect: {effect_name}")
 
     if effect_name == "water_color":
         logger.debug("Applying water color effect")

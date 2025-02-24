@@ -227,7 +227,7 @@ def ai_evaluation(frame_name: str, explanation: str, user_prompt: str) -> str:
         Judge the frame selection based on the user's prompt.
         You returned {frame_name} as frame name based on {context} with this explanation: {explanation}.
         start your response with 'YES:' or 'NO:' and then explain your reasoning. Be concise.
-        if NO then suggest user to enter a new prompt.
+        if NO then suggest user to enter a new prompt and give users a summary of the frames from the context.
         """
 
         messages = [

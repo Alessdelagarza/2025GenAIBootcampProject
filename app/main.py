@@ -2,9 +2,11 @@ import streamlit as st
 import logging
 import data.embeddings as llm
 import video.videoEffects as fxs
+import ai.ai_requests as ai
 import cv2
 import os
 import signal
+import time
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -12,13 +14,22 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def generate_story(detected_objects):
+    with st.spinner("AI is writing a story..."):
+        story = ai.ai_story(detected_objects)
+        st.write(story)
+
+
 def main():
     try:
-        # Set cyan background for entire app
+        # Set cyan background for entire app and top bar
         st.markdown(
             """
             <style>
                 .stApp {
+                    background-color: cyan;
+                }
+                header[data-testid="stHeader"] {
                     background-color: cyan;
                 }
             </style>
@@ -105,14 +116,14 @@ def main():
                 """,
                 unsafe_allow_html=True,
             )
-        # Add a checkbox for object detection trigger
-        checkbox_trigger = (
-            st.checkbox("Detect Objects", value=False)
-            if frame_name == "object_detection"
-            else False
-        )
-        logger.info(f"Object detection trigger: {checkbox_trigger}")
+
+        # Initialize story generation state
+        if "story_generated" not in st.session_state:
+            st.session_state.story_generated = False
+
         detected_objects_placeholder = st.empty()
+        countdown_placeholder = st.empty()
+        start_time = None
 
         while video_run:
             ret, frame = cap.read()
@@ -124,18 +135,30 @@ def main():
             # Apply the effect and convert from BGR to RGB for Streamlit
             if frame_name == "object_detection":
                 frame, detected_objects = fxs.apply_effect(
-                    frame, frame_name, trigger=checkbox_trigger
+                    frame, frame_name, trigger=True
                 )
+
                 if detected_objects:
+                    if start_time is None:
+                        start_time = time.time()
+
+                    elapsed_time = time.time() - start_time
+                    remaining_time = max(10 - int(elapsed_time), 0)
+                    countdown_placeholder.write(
+                        f"Generating story in: {remaining_time} seconds"
+                    )
+
                     detected_objects_placeholder.write("Detected Objects:")
                     all_objects = []
                     for obj, conf, _ in detected_objects:
                         all_objects.append(f"- {obj}: {conf:.2f}")
                     detected_objects_placeholder.write("\n".join(all_objects))
-                    if checkbox_trigger:
-                        video_run = False
-                        detected_objects_placeholder.write("Detected Objects:")
-                        detected_objects_placeholder.write("\n".join(all_objects))
+
+                    if elapsed_time >= 10 and not st.session_state.story_generated:
+                        generate_story(all_objects)
+                        st.session_state.story_generated = True
+                        countdown_placeholder.empty()
+                        break  # Exit the while loop after generating story once
             else:
                 frame = fxs.apply_effect(frame, frame_name)
 
