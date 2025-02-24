@@ -36,14 +36,18 @@ def main():
     if submit_button:
         with st.container():
             sfx.setup_spinner()
-            with st.spinner("AI is analyzing your prompt..."):
+            with st.spinner("🔍 AI is selecting a frame..."):
                 frame_name = llm.ai_frame_selection(user_prompt)
-                explanation = llm.ai_explanation(frame_name, user_prompt)
-                evaluation = llm.ai_evaluation(frame_name, explanation, user_prompt)
+                with st.spinner("✨ AI is generating explanation..."):
+                    explanation = llm.ai_explanation(frame_name, user_prompt)
+                    with st.spinner("🧪 AI is evaluating suggestion..."):
+                        evaluation = llm.ai_evaluation(
+                            frame_name, explanation, user_prompt
+                        )
 
         sfx.light_green_blob("AI Suggested Frame", frame_name)
         sfx.light_green_blob("Description", explanation)
-        sfx.light_green_blob("Evaluation", evaluation)
+        sfx.light_green_blob("Evaluation (Is This a Good Fit?)", evaluation)
 
         video_placeholder = st.empty()
         countdown_placeholder = st.empty()
@@ -80,12 +84,13 @@ def main():
                         all_objects.append(f"- {obj}: {conf:.2f}")
                     detected_objects_placeholder.write("\n".join(all_objects))
 
-                    if elapsed_time >= 10:
+                    if elapsed_time >= 10 and not st.session_state.story_generated:
                         sfx.setup_spinner()
                         with st.spinner("AI is generating a story..."):
                             story = ai.ai_story(all_objects)
                         sfx.light_pink_blob("AI Generated Story", story)
                         countdown_placeholder.empty()
+                        st.session_state.story_generated = True
             else:
                 frame = fxs.apply_effect(frame, frame_name)
 
