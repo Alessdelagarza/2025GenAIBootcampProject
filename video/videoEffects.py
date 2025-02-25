@@ -1,6 +1,10 @@
 import cv2
+import re
 import numpy as np
 import logging
+import requests
+import base64
+
 
 net = cv2.dnn.readNet("video/yolov3.weights", "video/yolov3.cfg")
 layer_names = net.getLayerNames()
@@ -29,6 +33,8 @@ def apply_effect(frame, effect_name, trigger=False):
         return apply_grayscale_effect(frame)
     elif effect_name == "object_detection":
         return apply_object_detection_theme(frame, trigger)
+    elif effect_name == "ocr":
+        return apply_default_effect(frame)
     else:
         logger.debug("Applying default effect")
         return apply_default_effect(frame)
@@ -115,3 +121,32 @@ def apply_object_detection_theme(frame, button_trigger=False):
         print("Detected objects:", detected_objects)
 
     return frame, detected_objects
+
+
+def get_ocr_text(frame, api_key):
+    _, encoded_image = cv2.imencode(".jpg", frame)
+    content = base64.b64encode(encoded_image).decode("utf-8")
+
+    payload = {
+        "requests": [
+            {"image": {"content": content}, "features": [{"type": "TEXT_DETECTION"}]}
+        ]
+    }
+
+    url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
+    response = requests.post(url, json=payload)
+
+    if response.status_code != 200:
+        raise Exception(
+            f"Request failed with status code {response.status_code}: {response.text}"
+        )
+
+    result = response.json()
+    text = result["responses"][0]["textAnnotations"][0]["description"]
+
+    ticket_number = re.search(r"(\d{5})", text).group(1)
+    time_match = re.search(r"(\d{2}):(\d{2})", text)
+    ticket_time = time_match.group(1) + time_match.group(2)
+    ticket_date = re.search(r"(\d{2}/\d{2}/\d{4})", text).group(1)
+
+    return ticket_number, ticket_time, ticket_date

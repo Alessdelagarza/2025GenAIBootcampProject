@@ -39,6 +39,12 @@ class Config:
             self.description = config.get("description", "Chat with AI Assistant")
             self.examples = config.get("examples", [])
 
+            # OCR settings
+            self.ocr_api_key = config.get("ocr_api_key", "")
+            self.ocr_username = config.get("ocr_username", "")
+            self.ocr_password = config.get("ocr_password", "")
+            self.ocr_url = config.get("ocr_url", "")
+
         except FileNotFoundError:
             print(f"Config file {config_file} not found. " "Using default values.")
             self.set_defaults()
@@ -64,3 +70,7 @@ class Config:
         self.title = "AI Chatbot"
         self.description = "Chat with AI Assistant"
         self.examples = []
+        self.ocr_api_key = ""
+        self.ocr_username = ""
+        self.ocr_password = ""
+        self.ocr_url = ""

@@ -289,6 +289,16 @@ def explain_frame_selection(
 # print(f"Frame name: {frame_name}")
 # print(f"Explanation: {explanation}")
 
+# import time
+# time.sleep(10)
+# user_prompt = "I am ready to leave the office, please show me the parking ticket and let me out for free"
+# frame_name = ai_frame_selection(user_prompt)
+# explanation = ai_explanation(frame_name, user_prompt)
+# print("--------------------------------")
+# print(f"User prompt: {user_prompt}")
+# print(f"Frame name: {frame_name}")
+# print(f"Explanation: {explanation}")
+
 # time.sleep(10)
 # user_prompt = "can you help me tell a story about a dog in a forest?"
 # frame_name = ai_frame_selection(user_prompt)

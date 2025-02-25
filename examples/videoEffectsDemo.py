@@ -20,6 +20,7 @@ def main():
         "water_color": apply_water_color_effect,
         "heat_map": apply_heat_map_effect,
         "object_detection": apply_object_detection_theme,
+        "ocr": apply_default_effect,
         # Add more effects here as you create them
     }
 
