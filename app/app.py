@@ -3,9 +3,14 @@ import streamlit_effects as sfx
 import data.embeddings as llm
 import video.videoEffects as fxs
 import ai.ai_requests as ai
+import automations.parking as prk
 import logging
 import time
 import cv2
+import config
+import asyncio
+
+config = config.Config()
 
 
 logging.basicConfig(
@@ -91,6 +96,64 @@ def main():
                         sfx.light_pink_blob("AI Generated Story", story)
                         countdown_placeholder.empty()
                         st.session_state.story_generated = True
+            if frame_name == "ocr":
+                if "ocr_performed" not in st.session_state:
+                    st.session_state.ocr_performed = False
+
+                frame = fxs.apply_effect(frame, frame_name)
+                if start_time is None:
+                    start_time = time.time()
+
+                elapsed_time = time.time() - start_time
+                remaining_time = max(10 - int(elapsed_time), 0)
+                countdown_placeholder.write(
+                    f"Performing OCR in: {remaining_time} seconds"
+                )
+
+                if elapsed_time >= 10 and not st.session_state.ocr_performed:
+                    sfx.setup_spinner()
+                    try:
+                        ticket_number, ticket_time, ticket_date = fxs.get_ocr_text(
+                            frame, config.ocr_api_key
+                        )
+                        if not all([ticket_number, ticket_time, ticket_date]):
+                            raise ValueError(
+                                "Could not extract all required ticket information"
+                            )
+
+                        ocr_result = {
+                            "Ticket Number": ticket_number,
+                            "Time": ticket_time,
+                            "Date": ticket_date,
+                        }
+                        sfx.light_pink_blob("OCR Results", str(ocr_result))
+
+                        with st.spinner("Performing OCR analysis..."):
+                            with st.spinner("🚗 🎫 validating parking"):
+
+                                async def run_with_timeout():
+                                    try:
+                                        await asyncio.wait_for(
+                                            prk.navigate_website(
+                                                ticket_number, ticket_date, ticket_time
+                                            ),
+                                            timeout=300,  # 5 minute timeout
+                                        )
+                                    except asyncio.TimeoutError:
+                                        raise TimeoutError(
+                                            "Parking validation timed out after 5 minutes"
+                                        )
+
+                                asyncio.run(run_with_timeout())
+                    except Exception as e:
+                        st.error(f"Error processing ticket: {str(e)}")
+                        return
+                    with st.expander("View Validation Screenshot", expanded=True):
+                        st.image(
+                            "screenshot.png", caption="Parking Validation Screenshot"
+                        )
+                    countdown_placeholder.empty()
+                    st.session_state.ocr_performed = True
             else:
                 frame = fxs.apply_effect(frame, frame_name)
 
